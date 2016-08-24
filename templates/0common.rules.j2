@@ -13,7 +13,14 @@
 -A OUTPUT -p icmp -j ACCEPT
 
 # DNS
+{% if network_address_mode=='dhcp' %}
 -A OUTPUT -p udp --dport 53 -j ACCEPT
 -A OUTPUT -p tcp --dport 53 -j ACCEPT
+{% else %}
+{% for server in network_dns %}
+-A OUTPUT -p udp -d {{ server }} --dport 53 -j ACCEPT
+-A OUTPUT -p tcp -d {{ server }} --dport 53 -j ACCEPT
+{% endfor %}
+{% endif %}
 
 COMMIT
