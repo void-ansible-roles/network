@@ -1,4 +1,11 @@
 ---
+# It is possible to completely disable network management, but
+# this is not recommended as it means that the network and firewall are
+# plausibly manged in multiple untracked places.  The firewall handler
+# and associated folders will be created unconditionally as many roles
+# in the void-ansible-roles depend on this folder and handler.
+network_managed_addressing: true
+
 # Options specified in this file will be applied to the default
 # interface as determined by the results of the variable
 # {{ ansible_default_ipv4.interface }}
@@ -25,6 +32,10 @@ network_dns_mode: dhcp
 network_dns:
   - 8.8.8.8
   - 8.8.4.4
+
+network_6dns:
+  - 2001:4860:4860::8888
+  - 2001:4860:4860::8844
 
 # If using dhcpcd, options to request from the dhcp server.  Options
 # shown here are the dhcpcd defaults and should be safe on most

@@ -1,6 +1,7 @@
 ---
 - name: Configure hosts
   template: src=hosts.j2 dest=/etc/hosts owner=root group=root mode=0644
+  when: network_managed_addressing
 
 - name: Configure hostname
   template: src=hostname.j2 dest=/etc/hostname owner=root group=root mode=0644
@@ -18,19 +19,23 @@
     network_cidr: "{{ ansible_default_ipv4.address }}/{{ network_netmask | ipaddr('prefix') }}"
   notify:
     - dhcpcd
+  when: network_managed_addressing
 
 - name: Enable dhcpcd
   file: src=/etc/sv/dhcpcd dest=/var/service/dhcpcd state=link
+  when: network_managed_addressing
 
 - name: Add dhcpcd iptables hook
   copy: src=99-iptables dest=/usr/share/dhcpcd/hooks/99-iptables owner=root group=root mode=0740
   notify:
     - dhcpcd
+  when: network_managed_addressing
 
 - name: Enable dhcpcd iptables hook
   file: src=/usr/share/dhcpcd/hooks/99-iptables dest=/usr/libexec/dhcpcd-hooks/99-iptables state=link owner=root group=root
   notify:
     - dhcpcd
+  when: network_managed_addressing
 
 - name: Make iptables.d
   file: path=/etc/iptables.d state=directory owner=root group=root mode=0740
@@ -40,7 +45,10 @@
   notify:
     - iptables
 
+- name: Make ip6tables.d
+  file: path=/etc/ip6tables.d state=directory owner=root group=root mode=0740
+
 - name: Configure base rules for IPv6 firewall
-  copy: src=ip6tables.conf dest=/etc/ip6tables.conf owner=root group=root mode=0640
+  template: src=0common.6rules dest=/etc/ip6tablesd.d/0common.6rules owner=root group=root mode=0640
   notify:
     - iptables
