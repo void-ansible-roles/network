@@ -49,6 +49,6 @@
   file: path=/etc/ip6tables.d state=directory owner=root group=root mode=0740
 
 - name: Configure base rules for IPv6 firewall
-  template: src=0common.6rules dest=/etc/ip6tablesd.d/0common.6rules owner=root group=root mode=0640
+  template: src=0common.6rules dest=/etc/ip6tables.d/0common.6rules owner=root group=root mode=0640
   notify:
     - iptables
