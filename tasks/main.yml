@@ -25,6 +25,10 @@
   file: src=/etc/sv/dhcpcd dest=/var/service/dhcpcd state=link
   when: network_managed_addressing
 
+- name: Enable wpa_supplicant hook
+  file: src=/usr/share/dhcpcd/hooks/10-wpa_supplicant dest=/usr/libexec/dhcpcd-hooks/10-wpa_supplicant state=link
+  when: network_enable_wpa_supplicant
+
 - name: Add dhcpcd iptables hook
   copy: src=99-iptables dest=/usr/share/dhcpcd/hooks/99-iptables owner=root group=root mode=0740
   notify:

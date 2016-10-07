@@ -6,6 +6,12 @@
 # in the void-ansible-roles depend on this folder and handler.
 network_managed_addressing: true
 
+
+# Enable the wpa_supplicant hook for dhcpcd, which will allow dhcpcd
+# to manage wireless cards if they are present.  This should not be
+# enabled on machines that do not have wireless cards.
+network_enable_wpa_supplicant: false
+
 # Options specified in this file will be applied to the default
 # interface as determined by the results of the variable
 # {{ ansible_default_ipv4.interface }}
