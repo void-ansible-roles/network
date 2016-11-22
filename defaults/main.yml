@@ -1,7 +1,7 @@
 ---
 # It is possible to completely disable network management, but
 # this is not recommended as it means that the network and firewall are
-# plausibly manged in multiple untracked places.  The firewall handler
+# plausibly managed in multiple untracked places.  The firewall handler
 # and associated folders will be created unconditionally as many roles
 # in the void-ansible-roles depend on this folder and handler.
 network_managed_addressing: true

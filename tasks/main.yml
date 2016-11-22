@@ -1,19 +1,41 @@
 ---
 - name: Configure hosts
-  template: src=hosts.j2 dest=/etc/hosts owner=root group=root mode=0644
+  template:
+    src: hosts.j2
+    dest: /etc/hosts
+    owner: root
+    group: root
+    mode: 0644
   when: network_managed_addressing
 
 - name: Configure hostname
-  template: src=hostname.j2 dest=/etc/hostname owner=root group=root mode=0644
+  template:
+    src: hostname.j2
+    dest: /etc/hostname
+    owner: root
+    group: root
+    mode: 0644
 
 - name: Install iptables
-  xbps: pkg=iptables state=present
+  xbps:
+    pkg: iptables
+    state: present
 
 - name: Install iptables-reload command
-  copy: src=iptables-reload dest=/usr/local/sbin/iptables-reload owner=root group=root mode=0755
+  copy:
+    src: iptables-reload
+    dest: /usr/local/sbin/iptables-reload
+    owner: root
+    group: root
+    mode: 0755
 
 - name: Configure dhcpcd
-  template: src=dhcpcd.conf.j2 dest=/etc/dhcpcd.conf owner=root group=root mode=0644
+  template:
+    src: dhcpcd.conf.j2
+    dest: /etc/dhcpcd.conf
+    owner: root
+    group: root
+    mode: 0644
   vars:
     network_netmask: "{{ ansible_default_ipv4.address }}/{{ ansible_default_ipv4.netmask }}"
     network_cidr: "{{ ansible_default_ipv4.address }}/{{ network_netmask | ipaddr('prefix') }}"
@@ -22,37 +44,73 @@
   when: network_managed_addressing
 
 - name: Enable dhcpcd
-  file: src=/etc/sv/dhcpcd dest=/var/service/dhcpcd state=link
+  file:
+    src: /etc/sv/dhcpcd
+    dest: /var/service/dhcpcd
+    state: link
   when: network_managed_addressing
 
 - name: Enable wpa_supplicant hook
-  file: src=/usr/share/dhcpcd/hooks/10-wpa_supplicant dest=/usr/libexec/dhcpcd-hooks/10-wpa_supplicant state=link
+  file:
+    src: /usr/share/dhcpcd/hooks/10-wpa_supplicant
+    dest: /usr/libexec/dhcpcd-hooks/10-wpa_supplicant
+    state: link
   when: network_enable_wpa_supplicant
 
 - name: Add dhcpcd iptables hook
-  copy: src=99-iptables dest=/usr/share/dhcpcd/hooks/99-iptables owner=root group=root mode=0740
+  copy:
+    src: 99-iptables
+    dest: /usr/share/dhcpcd/hooks/99-iptables
+    owner: root
+    group: root
+    mode: 0740
   notify:
     - dhcpcd
   when: network_managed_addressing
 
 - name: Enable dhcpcd iptables hook
-  file: src=/usr/share/dhcpcd/hooks/99-iptables dest=/usr/libexec/dhcpcd-hooks/99-iptables state=link owner=root group=root
+  file:
+    src: /usr/share/dhcpcd/hooks/99-iptables
+    dest: /usr/libexec/dhcpcd-hooks/99-iptables
+    state: link
+    owner: root
+    group: root
   notify:
     - dhcpcd
   when: network_managed_addressing
 
 - name: Make iptables.d
-  file: path=/etc/iptables.d state=directory owner=root group=root mode=0740
+  file:
+    path: /etc/iptables.d
+    state: directory
+    owner: root
+    group: root
+    mode: 0740
 
 - name: Configure base rules for IPv4 firewall
-  template: src=0common.rules.j2 dest=/etc/iptables.d/0common.rules owner=root group=root mode=0640
+  template:
+    src: 0common.rules.j2
+    dest: /etc/iptables.d/0common.rules
+    owner: root
+    group: root
+    mode: 0640
   notify:
     - iptables
 
 - name: Make ip6tables.d
-  file: path=/etc/ip6tables.d state=directory owner=root group=root mode=0740
+  file:
+    path: /etc/ip6tables.d
+    state: directory
+    owner: root
+    group: root
+    mode: 0740
 
 - name: Configure base rules for IPv6 firewall
-  template: src=0common.6rules dest=/etc/ip6tables.d/0common.6rules owner=root group=root mode=0640
+  template:
+    src: 0common.6rules
+    dest: /etc/ip6tables.d/0common.6rules
+    owner: root
+    group: root
+    mode: 0640
   notify:
     - iptables
