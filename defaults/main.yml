@@ -1,4 +1,10 @@
 ---
+# Options specified in this file will be applied to the default
+# interface as determined by the results of the variable
+# {{ ansible_default_ipv4.interface }}
+# Where not defined in the mapping below, options used defined here
+# will be treated as global defaults.
+
 # It is possible to completely disable network management, but
 # this is not recommended as it means that the network and firewall are
 # plausibly managed in multiple untracked places.  The firewall handler
@@ -6,15 +12,23 @@
 # in the void-ansible-roles depend on this folder and handler.
 network_managed_addressing: true
 
-
 # Enable the wpa_supplicant hook for dhcpcd, which will allow dhcpcd
 # to manage wireless cards if they are present.  This should not be
 # enabled on machines that do not have wireless cards.
 network_enable_wpa_supplicant: false
 
-# Options specified in this file will be applied to the default
-# interface as determined by the results of the variable
-# {{ ansible_default_ipv4.interface }}
+# Is IPv6 Enabled on this host?
+network_ipv6_enabled: false
+
+# Should IPv6 use Router Solicitations?
+network_ipv6_rs_enabled: false
+
+# Should dhcpcd use stateless autoconfiguration for IPv6?
+network_address_use_slaac: true
+
+# If using slaac, what mode should it operate in (IPv6)?
+network_address_slaac_mode: private
+
 
 # Network addressing mode: this token may be set to either 'dhcp' or
 # 'static'.  Static mode requires additional parameters.
@@ -29,6 +43,10 @@ network_address_mode: dhcp
 # this value the current gateway as assigned by DHCP will be made
 # static.
 # network_gateway: 192.168.1.1
+
+# What address will be set for v6?  This must be specified in CIDR
+# format.
+# network_ipv6_address:
 
 # DNS mode, may be set to either 'dhcp' or 'static'.  Static mode
 # requires dhcp servers to be specified manually.

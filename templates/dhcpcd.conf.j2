@@ -9,31 +9,47 @@ option {{ option }}
 {% endfor %}
 require dhcp_server_identifier
 {% endif %}
-slaac private
+{% if network_address_use_slaac %}
+slaac {{ network_address_slaac_mode }}
+{% endif %}
 
 interface {{ ansible_default_ipv4.interface }}
 {% if network_address_mode=='static' %}
-# Static configuration for {{ ansible_default_ipv4.interface }}
-nodhcp
-static ip_address={{ network_address | default(network_cidr) }}
-static routers={{ network_gateway | default(ansible_default_ipv4.gateway) }}
-{% else %}
-# Use DHCP for {{ ansible_default_ipv4.interface }}
-dhcp
+   # Static configuration for {{ ansible_default_ipv4.interface }}
+   nodhcp
+   static ip_address={{ network_address | default(network_cidr) }}
+   static routers={{ network_gateway | default(ansible_default_ipv4.gateway) }}
+{% if network_ipv6_enabled %}
+   noipv6rs
+   static ip6_address={{ network_ipv6_address }}
 {% endif %}
+{% else %}
+   # Use DHCP for {{ ansible_default_ipv4.interface }}
+   dhcp
+{% if network_ipv6_enabled %}
+   dhcp6
+{% if network_ipv6_rs_enabled %}
+   ipv6rs
+{% endif %}
+{% endif %}
+{% endif %}
+
 {% if (network_dns_mode=='static') or (network_address_mode=='static') %}
-# Use static resolvers
-static domain_name_servers={{ network_dns | join(" ") }}
+   # Use static resolvers
+   static domain_name_servers={{ network_dns | join(" ") }}
+{% if network_ipv6_enabled %}
+   static domain_name_servers={{ network_6dns | join(" ") }}
+{% endif %}
 {% endif %}
 
 {% if network_static_interfaces is defined %}
 # Additional static interfaces
 {% for interface in network_static_interfaces %}
-# Static configuration for {{ network_static_interfaces.interface }}
-interface {{ network_static_interfaces.interface }}
-nodhcp
-static ip_address={{ network_static_interfaces[interface].address }}
-static routers={{ network_static_interfaces[interface].gateway }}
-static domain_name_servers={{ network_static_interfaces[interface].dns | join(" ") }}
+   # Static configuration for {{ network_static_interfaces.interface }}
+   interface {{ network_static_interfaces.interface }}
+   nodhcp
+   static ip_address={{ network_static_interfaces[interface].address }}
+   static routers={{ network_static_interfaces[interface].gateway }}
+   static domain_name_servers={{ network_static_interfaces[interface].dns | join(" ") }}
 {% endfor %}
 {% endif %}
