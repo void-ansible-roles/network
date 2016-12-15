@@ -1,11 +1,13 @@
 controlgroup wheel
 persistent
+{% if 'dhcp' in dhcp_interfaces %}
 hostname
 duid
 {% for option in network_dhcp_options %}
 option {{ option }}
 {% endfor %}
 require dhcp_server_identifier
+{% endif %}
 {% if network_address_use_slaac %}
 slaac {{ network_address_slaac_mode }}
 {% endif %}

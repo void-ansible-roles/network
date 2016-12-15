@@ -1,3 +1,4 @@
+
 ---
 - name: Configure hosts
   template:
@@ -39,6 +40,7 @@
   vars:
     network_netmask: "{{ ansible_default_ipv4.address }}/{{ ansible_default_ipv4.netmask }}"
     network_cidr: "{{ ansible_default_ipv4.address }}/{{ network_netmask | ipaddr('prefix') }}"
+    dhcp_interfaces: "{{ network_interfaces | json_query('[*].mode') }}"
   notify:
     - dhcpcd
   when: network_managed_addressing
