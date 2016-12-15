@@ -19,7 +19,7 @@
 -A OUTPUT -o {{ interface.name | replace("default", ansible_default_ipv4.interface) }} -p udp --dport 53 -j ACCEPT
 -A OUTPUT -o {{ interface.name | replace("default", ansible_default_ipv4.interface) }} -p tcp --dport 53 -j ACCEPT
 {% elif (interface.mode=='static') or (interface.resolvermode=='static') %}
-{% for resolver in interface.resolvers %}
+{% for resolver in interface.resolvers | default(network_dns) %}
 -A OUTPUT -o {{ interface.name | replace("default", ansible_default_ipv4.interface) }} -p udp -d {{ resolver }} --dport 53 -j ACCEPT
 -A OUTPUT -o {{ interface.name | replace("default", ansible_default_ipv4.interface) }} -p tcp -d {{ resolver }} --dport 53 -j ACCEPT
 {% endfor%}
