@@ -27,8 +27,6 @@ Files Managed:
 Defaults Provided:
   * network_managed_addressing: true
   * network_enable_wpa_supplicant: false
-  * network_address_mode: dhcp
-  * network_dns_mode: dhcp
   * network_dns: [8.8.8.8,8.8.4.4]
   * network_6dns: [2001:4860:4860::8888,2001:4860:4860::8844]
   * network_dhcp_options: [rapid_commit,domain_name_servers,domain_name,domain_search,host_name,classless_static_routes,ntp_servers,interface_mtu]
@@ -39,10 +37,18 @@ Variables Required:
   * None
 
 Optional Variables:
-  * network_address: a statically defined address with netmask in CIDR format
-  * network_gateway: a statically defined gateway to be used in static mode
-
-A lengthy discussion of what the variables do is available in defaults/main.yml, as well as a few undocumented variables that provide advanced capabilities.
+  * network_interfaces: Dictionary of interfaces to configure
+      - name: Name of the interface as reported by `ip link show`; may use special value 'default' to select ansible_default_ipv{4,6} interface
+        mode: static, dhcp, or disabled
+        mode6: mode for IPv6 (static, dhcp, disabled)
+        resolvermode: dhcp or static
+        resolvermode6: mode for IPv6 (static, dhcp)
+        addresses: list of addresses for static assignment, CIDR format
+        addresses6: same as addresses, for IPv6
+        resolvers: list of static IPv4 resolvers, required when mode is 'static' or resolvermode is 'static'
+        resolvers6: list of static IPv6 resolvers, required when mode6 is 'static' or resolvermode6 is 'static'
+        routers: list of routers for this interface, only specify more than 1 if you know what you are doing!
+        routers6: list of IPv6 capable routers for this interface, only specify more than 1 if you know what you are doing!
 
 Files Required:
   * None
