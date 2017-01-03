@@ -20,40 +20,44 @@ interface {{ ansible_default_ipv4.interface }}
 interface {{ interface.name }}
 {% endif %}
 {% if interface.mode == 'static' %}
-        nodhcp
+	nodhcp
 {% for address in interface.addresses %}
-        static ip_address={{ address | default(network_cidr) }}
+	static ip_address={{ address | default(network_cidr) }}
 {% endfor %}
 {% for router in interface.routers %}
-        static routers={{ router | default(ansible_default_ipv4.gateway) }}
+	static routers={{ router | default(ansible_default_ipv4.gateway) }}
 {% endfor %}
 {% elif interface.mode == 'dhcp' %}
-        dhcp
+	dhcp
 {% elif interface.mode == 'disabled' %}
-        nopipv4
+	nopipv4
 {% endif %}
 {% if interface.mode != 'disabled' %}
 {% if (interface.mode=='static') or (interface.resolvermode=='static' | default(omit)) %}
-        static domain_name_servers={{ interface.resolvers | default(network_dns) | join(" ") }}
+	static domain_name_servers={{ interface.resolvers | default(network_dns) | join(" ") }}
 {% endif %}
 {% endif %}
 
 {% if interface.mode6 == 'static' %}
+{% if interface.routers6 | default(false) %}
         noipv6rs
+{% endif %}
 {% for address6 in interface.addresses6 %}
-        static ip6_address={{ address6 }}
+	static ip6_address={{ address6 }}
 {% endfor %}
+{% if interface.routers6 is defined %}
 {% for router6 in interface.routers6 %}
-        static routers={{ router6| default(ansible_default_ipv6.gateway) }}
+	static routers={{ router6 | default(ansible_default_ipv6.gateway) }}
 {% endfor %}
+{% endif %}
 {% elif interface.mode6 == 'dhcp' %}
-        dhcp6
+	dhcp6
 {% elif interface.mode6 == 'disabled' %}
-        noipv6
+	noipv6
 {% endif %}
 {% if interface.mode6 != 'disabled' %}
 {% if (interface.mode6=='static') or (interface.resolvermode6=='static') %}
-   static domain_name_servers={{ interface.resolvers6 | default(network_6dns) | join(" ") }}
+	static domain_name_servers={{ interface.resolvers6 | default(network_6dns) | join(" ") }}
 {% endif %}
 {% endif %}
 {% endfor %}
