@@ -1,4 +1,3 @@
-
 ---
 - name: Configure hosts
   template:
@@ -46,10 +45,10 @@
   when: network_managed_addressing
 
 - name: Enable dhcpcd
-  file:
-    src: /etc/sv/dhcpcd
-    dest: /var/service/dhcpcd
-    state: link
+  runit:
+    name: dhcpcd
+    enabled: yes
+    state: started
   when: network_managed_addressing
 
 - name: Enable wpa_supplicant hook
