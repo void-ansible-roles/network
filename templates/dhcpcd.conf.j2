@@ -21,9 +21,13 @@ interface {{ interface.name }}
 {% endif %}
 {% if interface.mode == 'static' %}
 	nodhcp
+{% if interface.addresses is defined %}
 {% for address in interface.addresses %}
 	static ip_address={{ address | default(network_cidr) }}
 {% endfor %}
+{% else %}
+	static ip_address={{ network_cidr }}
+{% endif %}
 {% for router in interface.routers %}
 	static routers={{ router | default(ansible_default_ipv4.gateway) }}
 {% endfor %}
@@ -40,7 +44,7 @@ interface {{ interface.name }}
 
 {% if interface.mode6 == 'static' %}
 {% if interface.routers6 | default(false) %}
-        noipv6rs
+	noipv6rs
 {% endif %}
 {% for address6 in interface.addresses6 %}
 	static ip6_address={{ address6 }}
