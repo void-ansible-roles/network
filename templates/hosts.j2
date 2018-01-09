@@ -1,7 +1,8 @@
 127.0.0.1	localhost
-127.0.1.1       {{ ansible_fqdn }} {{ ansible_hostname }}
+127.0.1.1       {{ network_fqdn | default(ansible_fqdn) }} {{ network_hostname | default(ansible_hostname) }}
 
-::1	{{ ansible_fqdn }} {{ ansible_hostname }}
+::1             {{ network_fqdn | default(ansible_fqdn) }} {{ network_hostname | default(ansible_hostname) }}
+
 
 # This has to be last since NSS will pick the first name and this
 # isn't always a valid service name to grab, particularly in the case

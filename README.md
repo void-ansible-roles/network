@@ -5,7 +5,10 @@ network
 What is does this role do?
 --------------------------
 
-This role configures and manages various different components of the network.  Most configuration is done via dhcpcd even when using static addressing.  This allows for configurations to be enforced by using a daemon rather than just specifying options in /etc/rc.local.
+This role configures and manages various different components of the
+network.  Most configuration is done via dhcpcd even when using static
+addressing.  This allows for configurations to be enforced by using a
+daemon rather than just specifying options in /etc/rc.local.
 
 
 Meta
@@ -49,6 +52,9 @@ Optional Variables:
         resolvers6: list of static IPv6 resolvers, required when mode6 is 'static' or resolvermode6 is 'static'
         routers: list of routers for this interface, only specify more than 1 if you know what you are doing!
         routers6: list of IPv6 capable routers for this interface, only specify more than 1 if you know what you are doing!
+
+  * network_hostname: hostname to set for the host, defaults to ansible_hostname
+  * network_fqdn: fqdn to set for the host, defaults to ansible_fqdn
 
 Files Required:
   * None

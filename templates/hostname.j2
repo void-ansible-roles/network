@@ -1,1 +1,1 @@
-{{ ansible_hostname }}
+{{ network_hostname | default(ansible_hostname) }}
