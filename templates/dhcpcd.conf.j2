@@ -34,7 +34,7 @@ interface {{ interface.name }}
 {% elif interface.mode == 'dhcp' %}
 	dhcp
 {% elif interface.mode == 'disabled' %}
-	nopipv4
+	noipv4
 {% endif %}
 {% if interface.mode != 'disabled' %}
 {% if (interface.mode=='static') or (interface.resolvermode=='static' | default(omit)) %}
