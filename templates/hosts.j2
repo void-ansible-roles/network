@@ -3,6 +3,9 @@
 
 ::1             {{ network_fqdn | default(ansible_fqdn) }} {{ network_hostname | default(ansible_hostname) }}
 
+{% for host in network_boot_hosts | default([]) %}
+{{ host.addr }} {{ host.name }}
+{% endfor %}
 
 # This has to be last since NSS will pick the first name and this
 # isn't always a valid service name to grab, particularly in the case

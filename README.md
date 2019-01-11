@@ -55,6 +55,9 @@ Optional Variables:
 
   * network_hostname: hostname to set for the host, defaults to ansible_hostname
   * network_fqdn: fqdn to set for the host, defaults to ansible_fqdn
+  * network_boot_hosts: Array of hosts to be defined in the hosts file for use before the resolver is available
+    - addr: address to be defined
+    - name: name(s) to be defined
 
 Files Required:
   * None
