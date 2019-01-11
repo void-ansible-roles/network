@@ -21,6 +21,14 @@
     pkg: iptables
     state: present
 
+- name: Configure resolvers
+  template:
+    src: resolv.conf.tail.j2
+    dest: /etc/resolv.conf.tail
+    owner: root
+    group: root
+    mode: 0644
+
 - name: Install iptables-reload command
   copy:
     src: iptables-reload

@@ -1,0 +1,14 @@
+{% for iface in network_interfaces %}
+{% for resolver in iface.resolvers | default([]) %}
+nameserver {{ resolver }}
+{% endfor %}
+{% for resolver in iface.resolvers6 | default([]) %}
+nameserver {{ resolver }}
+{% endfor %}
+{% endfor %}
+{% for resolver in network_dns | default([]) %}
+nameserver {{ resolver }}
+{% endfor %}
+{% for resolver in network_6dns | default([]) %}
+nameserver {{ resolver }}
+{% endfor %}

@@ -18,6 +18,7 @@ Files Managed:
   * /etc/hosts
   * /etc/hostname
   * /etc/dhcpcd.conf
+  * /etc/resolv.conf.tail
   * /etc/iptables.d/
   * /etc/iptables.d/0common.rules
   * /etc/ip6tables.d/
@@ -30,8 +31,6 @@ Files Managed:
 Defaults Provided:
   * network_managed_addressing: true
   * network_enable_wpa_supplicant: false
-  * network_dns: [8.8.8.8,8.8.4.4]
-  * network_6dns: [2001:4860:4860::8888,2001:4860:4860::8844]
   * network_dhcp_options: [rapid_commit,domain_name_servers,domain_name,domain_search,host_name,classless_static_routes,ntp_servers,interface_mtu]
   * network_input_policy: DROP
   * network_output_policy: DROP
@@ -58,6 +57,8 @@ Optional Variables:
   * network_boot_hosts: Array of hosts to be defined in the hosts file for use before the resolver is available
     - addr: address to be defined
     - name: name(s) to be defined
+  * network_dns: list of IPv4 DNS resolvers
+  * network_6dns: list of IPv6 DNS resolvers
 
 Files Required:
   * None
