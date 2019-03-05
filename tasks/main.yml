@@ -60,11 +60,9 @@
   when: network_managed_addressing
 
 - name: Enable wpa_supplicant hook
-  file:
-    src: /usr/share/dhcpcd/hooks/10-wpa_supplicant
-    dest: /usr/libexec/dhcpcd-hooks/10-wpa_supplicant
-    state: link
-  when: network_enable_wpa_supplicant
+  runit:
+    name: wpa_supplicant
+    enabled: "{{ network_enable_wpa_supplicant }}"
 
 - name: Add dhcpcd iptables hook
   copy:
