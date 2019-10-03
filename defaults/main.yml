@@ -70,3 +70,4 @@ network_dhcp_options:
 # instructions.  Valid options are 'ACCEPT' and 'DROP'.
 network_input_policy: DROP
 network_output_policy: DROP
+network_forward_policy: DROP
