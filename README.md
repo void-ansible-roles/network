@@ -34,6 +34,7 @@ Defaults Provided:
   * network_dhcp_options: [rapid_commit,domain_name_servers,domain_name,domain_search,host_name,classless_static_routes,ntp_servers,interface_mtu]
   * network_input_policy: DROP
   * network_output_policy: DROP
+  * network_forward_policy: DROP
 
 Variables Required:
   * None
