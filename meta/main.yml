@@ -1,0 +1,17 @@
+---
+dependencies: []
+
+galaxy_info:
+  role_name: network
+  author: Michael Aldridge
+  description: Manage various network components, using dhcpcd and iptables.
+  license: license (MIT)
+  platforms:
+    - name: Void Linux
+      version:
+        - all
+  galaxy_tags:
+    - networking
+    - system
+    - firewall
+    - security
