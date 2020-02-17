@@ -42,13 +42,13 @@ network_interfaces:
 # Additional options are available for network interfaces in the README
 
 # DNS servers to be used in static mode.
-# network_dns:
-#   - 8.8.8.8
-#   - 8.8.4.4
+network_dns:
+  - 8.8.8.8
+  - 8.8.4.4
 
-# network_6dns:
-#   - 2001:4860:4860::8888
-#   - 2001:4860:4860::8844
+network_6dns:
+  - 2001:4860:4860::8888
+  - 2001:4860:4860::8844
 
 # If using dhcpcd, options to request from the dhcp server.  Options
 # shown here are the dhcpcd defaults and should be safe on most

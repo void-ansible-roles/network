@@ -1,14 +1,24 @@
 {% for iface in network_interfaces %}
+{% if iface.mode != 'disabled' %}
+{% set v4_in_use = true %}
 {% for resolver in iface.resolvers | default([]) %}
 nameserver {{ resolver }}
 {% endfor %}
+{% endif %}
+{% if iface.mode6 != 'disabled' %}
+{% set v6_in_use = true %}
 {% for resolver in iface.resolvers6 | default([]) %}
 nameserver {{ resolver }}
 {% endfor %}
+{% endif %}
 {% endfor %}
+{% if v4_in_use is defined %}
 {% for resolver in network_dns | default([]) %}
 nameserver {{ resolver }}
 {% endfor %}
+{% endif %}
+{% if v6_in_use is defined %}
 {% for resolver in network_6dns | default([]) %}
 nameserver {{ resolver }}
 {% endfor %}
+{% endif %}
