@@ -1,0 +1,40 @@
+# this file is managed by ansible, local changes will not persist
+
+source /etc/network/interfaces.d/*
+
+{# special-case loopback -#}
+auto lo
+iface lo inet loopback
+
+{% for interface in network_interfaces -%}
+{% set mode = interface.mode | default("disabled") -%}
+{% set mode6 = interface.mode6 | default("disabled") -%}
+
+{% if interface.name in ansible_facts.interfaces and (mode != "disabled" or mode6 != "disabled") -%}
+auto {{ interface.name }}
+{% if mode != "disabled" -%}
+iface {{ interface.name }} inet {{ mode }}
+{% if mode == "static" -%}
+{# ansible-based autodetection IS NOT SUPPORTED in the refactor -#}
+{%- for address in interface.addresses %}
+    address {{ address }}
+{% endfor %}
+{%- for gateway in interface.routers %}
+    gateway {{ gateway }}
+{% endfor %}
+{% endif %}
+{% endif %}
+{# second verse, same as the first, little bit louder, little bit ipv6 -#}
+{% if mode6 != "disabled" -%}
+iface {{ interface.name }} inet6 {{ mode6 }}
+{% if mode6 == "static" %}
+{%- for address in interface.addresses6 %}
+    address {{ address }}
+{% endfor %}
+{%- for gateway in interface.routers6 | default(["fe80::1"]) %}
+    gateway {{ gateway }}
+{% endfor %}
+{% endif %}
+{% endif %}
+{% endif %}
+{% endfor %}

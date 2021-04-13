@@ -1,17 +1,12 @@
 controlgroup wheel
 persistent
-{% if 'dhcp' in dhcp_interfaces %}
+{% if 'dhcp' in dhcp_interfaces|default({}) %}
 hostname
 duid
 {% for option in network_dhcp_options %}
 option {{ option }}
 {% endfor %}
 require dhcp_server_identifier
-{% endif %}
-{% if network_address_use_slaac %}
-slaac {{ network_address_slaac_mode }}
-{% endif %}
-
 
 {% for interface in network_interfaces %}
 {% if interface.name == 'default' %}
@@ -19,39 +14,17 @@ interface {{ ansible_default_ipv4.interface }}
 {% else %}
 interface {{ interface.name }}
 {% endif %}
-{% if interface.mode == 'static' %}
-	nodhcp
-{% if interface.addresses is defined %}
-{% for address in interface.addresses %}
-	static ip_address={{ address | default(network_cidr) }}
-{% endfor %}
-{% else %}
-	static ip_address={{ network_cidr }}
-{% endif %}
-{% for router in interface.routers %}
-	static routers={{ router | default(ansible_default_ipv4.gateway) }}
-{% endfor %}
-{% elif interface.mode == 'dhcp' %}
+{% if interface.mode == 'dhcp' %}
 	dhcp
-{% elif interface.mode == 'disabled' %}
+{% else %}
 	noipv4
 {% endif %}
-
-{% if interface.mode6 == 'static' %}
-{% if interface.routers6 | default(false) %}
-	noipv6rs
-{% endif %}
-{% for address6 in interface.addresses6 %}
-	static ip6_address={{ address6 }}
-{% endfor %}
-{% if interface.routers6 is defined %}
-{% for router6 in interface.routers6 %}
-	static routers={{ router6 | default(ansible_default_ipv6.gateway) }}
-{% endfor %}
-{% endif %}
-{% elif interface.mode6 == 'dhcp' %}
+{% if interface.mode6 == 'dhcp' %}
 	dhcp6
-{% elif interface.mode6 == 'disabled' %}
+{% else %}
 	noipv6
 {% endif %}
 {% endfor %}
+{% else %}
+nogateway
+{% endif %}
