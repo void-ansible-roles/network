@@ -1,0 +1,15 @@
+*filter
+:INPUT {{ network_input_policy }} [0:0]
+:FORWARD {{ network_forward_policy }} [0:0]
+:OUTPUT {{ network_output_policy }} [0:0]
+-A INPUT -i lo -j ACCEPT
+-A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+{% if network_iptables_ssh_failsafe %}
+-A INPUT -p tcp --dport 22 -j ACCEPT
+{% endif %}
+-A INPUT -p icmp -j ACCEPT
+
+-A OUTPUT -o lo -j ACCEPT
+-A OUTPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+-A OUTPUT -p icmp -j ACCEPT
+COMMIT

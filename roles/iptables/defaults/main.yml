@@ -1,0 +1,5 @@
+---
+network_iptables_ssh_failsafe: true
+network_input_policy: DROP
+network_output_policy: DROP
+network_forward_policy: DROP

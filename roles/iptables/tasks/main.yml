@@ -1,0 +1,49 @@
+---
+- name: Install iptables
+  xbps:
+    pkg: iptables
+    state: present
+
+- name: Install iptables-reload command
+  copy:
+    src: iptables-reload
+    dest: /usr/local/sbin/iptables-reload
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Make iptables.d
+  file:
+    path: /etc/iptables.d
+    state: directory
+    owner: root
+    group: root
+    mode: 0740
+
+- name: Configure base rules for IPv4 firewall
+  template:
+    src: 0common.rules.j2
+    dest: /etc/iptables.d/0common.rules
+    owner: root
+    group: root
+    mode: 0640
+  notify:
+    - iptables
+
+- name: Make ip6tables.d
+  file:
+    path: /etc/ip6tables.d
+    state: directory
+    owner: root
+    group: root
+    mode: 0740
+
+- name: Configure base rules for IPv6 firewall
+  template:
+    src: 0common.6rules.j2
+    dest: /etc/ip6tables.d/0common.6rules
+    owner: root
+    group: root
+    mode: 0640
+  notify:
+    - iptables

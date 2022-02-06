@@ -1,0 +1,3 @@
+---
+- name: iptables
+  command: /usr/local/sbin/iptables-reload

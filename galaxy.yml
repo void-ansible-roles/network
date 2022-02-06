@@ -1,0 +1,19 @@
+namespace: void
+name: network
+version: 0.1.0
+readme: README.md
+authors:
+  - Michael Aldridge <maldridge@voidlinux.org>
+description: Network Primitives for Void Linux
+
+license:
+  - MIT
+tags:
+  - network
+  - voidlinux
+  - firewall
+  - iptables
+
+repository: https://www.github.com/void-ansible-roles/network
+issues: https://www.github.com/void-ansible-roles/network/issues
+

@@ -1,0 +1,55 @@
+---
+- name: Configure hosts
+  template:
+    src: hosts.j2
+    dest: /etc/hosts
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Configure hostname
+  template:
+    src: hostname.j2
+    dest: /etc/hostname
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Configure static DNS
+  template:
+    src: resolv.conf.j2
+    dest: /etc/resolv.conf
+    owner: root
+    group: root
+    mode: 0644
+  when: network_static_dns_resolvers is defined or network_static_dns_search is defined
+
+- name: Configure IPv4 firewall for static DNS
+  template:
+    src: 0dns.rules.j2
+    dest: /etc/iptables.d/0dns.rules
+    owner: root
+    group: root
+    mode: 0640
+  notify:
+    - iptables
+  vars:
+    dns_servers: "{{network_static_dns_resolvers|ansible.netcommon.ipv4}}"
+  when:
+    - network_static_dns_resolvers is defined
+    - network_static_dns_resolvers|ansible.netcommon.ipv4
+
+- name: Configure IPv6 firewall for static DNS
+  template:
+    src: 0dns.rules.j2
+    dest: /etc/ip6tables.d/0dns.6rules
+    owner: root
+    group: root
+    mode: 0640
+  notify:
+    - iptables
+  vars:
+    dns_servers: "{{network_static_dns_resolvers|ansible.netcommon.ipv6}}"
+  when:
+    - network_static_dns_resolvers is defined
+    - network_static_dns_resolvers|ansible.netcommon.ipv6

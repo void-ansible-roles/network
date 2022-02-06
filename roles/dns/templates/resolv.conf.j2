@@ -1,0 +1,6 @@
+{% for nameserver in network_static_dns_resolvers|default([]) %}
+nameserver {{nameserver}}
+{% endfor %}
+{% for search in network_static_dns_search|default([]) %}
+search {{search}}
+{% endfor %}

@@ -1,0 +1,11 @@
+---
+- name: Ensure Packages
+  xbps:
+    pkg: dhcpcd
+    state: present
+
+- name: Enable Service
+  runit:
+    service: dhcpcd
+    state: started
+    enabled: true

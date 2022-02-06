@@ -1,0 +1,6 @@
+*filter
+{% for server in dns_servers %}
+-A OUTPUT -p tcp -d {{server}} --dport 53 -j ACCEPT
+-A OUTPUT -p udp -d {{server}} --dport 53 -j ACCEPT
+{% endfor %}
+COMMIT
