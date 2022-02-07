@@ -6,6 +6,6 @@
 
 - name: Enable Service
   runit:
-    service: dhcpcd
+    name: dhcpcd
     state: started
     enabled: true
