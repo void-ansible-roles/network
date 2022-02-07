@@ -34,7 +34,7 @@
   notify:
     - iptables
   vars:
-    dns_servers: "{{network_static_dns_resolvers|ansible.netcommon.ipv4}}"
+    dns_servers: "{{ network_static_dns_resolvers|ansible.netcommon.ipv4 }}"
   when:
     - network_static_dns_resolvers is defined
     - network_static_dns_resolvers|ansible.netcommon.ipv4
@@ -49,7 +49,7 @@
   notify:
     - iptables
   vars:
-    dns_servers: "{{network_static_dns_resolvers|ansible.netcommon.ipv6}}"
+    dns_servers: "{{ network_static_dns_resolvers|ansible.netcommon.ipv6 }}"
   when:
     - network_static_dns_resolvers is defined
     - network_static_dns_resolvers|ansible.netcommon.ipv6
