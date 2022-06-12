@@ -47,3 +47,9 @@
     mode: 0640
   notify:
     - iptables
+
+- name: Configure boot-time service
+  file:
+    src: /usr/local/sbin/iptables-reload
+    dest: /etc/runit/core-services/04-iptables.sh
+    state: link
