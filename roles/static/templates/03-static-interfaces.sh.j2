@@ -1,13 +1,19 @@
 #!/bin/sh
 {% for interface in network_static_interfaces %}
 {% if interface.type == "vlan" %}
-ip link add name {{interface.name}} link {{interface.parent}} type vlan id {{interface.id}}
+ip link add {{ interface.name }} link {{ interface.parent }} type vlan id {{ interface.id }}
+{% endif %}
+{% if interface.type == "bond" %}
+ip link add {{ interface.name }} type bond mode {{ interface.bond_mode|default("802.3ad") }}
+{% for sub in interface.bond_members %}
+ip link set {{ sub }} master {{ interface.name }}
+{% endfor %}
 {% endif %}
 {% for addr in interface.addrs|default([]) %}
-ip address add {{addr}} dev {{interface.name}}
+ip address add {{ addr }} dev {{ interface.name }}
 {% endfor %}
-ip link set {{interface.name}} up
+ip link set {{ interface.name }} up
 {% endfor %}
 {% for route in network_static_routes %}
-ip route add {{route.to}} via {{route.via}}
+ip route add {{ route.to }} via {{ route.via }}
 {% endfor %}
