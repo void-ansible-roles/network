@@ -7,6 +7,7 @@
     group: root
     mode: "0644"
   when: network_managed_addressing
+  tags: [configure_hosts]
 
 - name: Configure hostname
   ansible.builtin.template:
@@ -15,11 +16,13 @@
     owner: root
     group: root
     mode: "0644"
+  tags: [configure_hostname]
 
 - name: Install iptables
   community.general.xbps:
     pkg: iptables
     state: present
+  tags: [install_iptables]
 
 - name: Configure resolvers
   ansible.builtin.template:
@@ -28,6 +31,7 @@
     owner: root
     group: root
     mode: "0644"
+  tags: [configure_dns]
 
 - name: Install iptables-reload command
   ansible.builtin.copy:
@@ -36,6 +40,7 @@
     owner: root
     group: root
     mode: "0755"
+  tags: [install_iptables]
 
 - name: Configure dhcpcd
   ansible.builtin.template:
@@ -51,6 +56,7 @@
   notify:
     - dhcpcd
   when: network_managed_addressing
+  tags: [configure_dhcpcd]
 
 - name: Enable dhcpcd
   community.general.runit:
@@ -58,11 +64,13 @@
     enabled: true
     state: started
   when: network_managed_addressing
+  tags: [enable_dhcpcd]
 
 - name: Enable wpa_supplicant hook
   community.general.runit:
     name: wpa_supplicant
     enabled: "{{ network_enable_wpa_supplicant }}"
+  tags: [enable_wpa_supplicant]
 
 - name: Add dhcpcd iptables hook
   ansible.builtin.copy:
@@ -74,6 +82,7 @@
   notify:
     - dhcpcd
   when: network_managed_addressing
+  tags: [configure_dhcpcd, configure_iptables]
 
 - name: Enable dhcpcd iptables hook
   ansible.builtin.file:
@@ -85,6 +94,7 @@
   notify:
     - dhcpcd
   when: network_managed_addressing
+  tags: [configure_dhcpcd, configure_iptables]
 
 - name: Make iptables.d
   ansible.builtin.file:
@@ -93,6 +103,7 @@
     owner: root
     group: root
     mode: "0740"
+  tags: [install_iptables]
 
 - name: Configure base rules for IPv4 firewall
   ansible.builtin.template:
@@ -103,6 +114,7 @@
     mode: "0640"
   notify:
     - iptables
+  tags: [install_iptables, configure_iptables]
 
 - name: Make ip6tables.d
   ansible.builtin.file:
@@ -111,6 +123,7 @@
     owner: root
     group: root
     mode: "0740"
+  tags: [install_iptables]
 
 - name: Configure base rules for IPv6 firewall
   ansible.builtin.template:
@@ -121,3 +134,4 @@
     mode: "0640"
   notify:
     - iptables
+  tags: [install_iptables, configure_iptables]

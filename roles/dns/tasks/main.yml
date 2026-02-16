@@ -6,6 +6,7 @@
     owner: root
     group: root
     mode: "0644"
+  tags: [configure_hosts]
 
 - name: Configure hostname
   ansible.builtin.template:
@@ -14,6 +15,7 @@
     owner: root
     group: root
     mode: "0644"
+  tags: [configure_hostname]
 
 - name: Configure static DNS
   ansible.builtin.template:
@@ -23,6 +25,7 @@
     group: root
     mode: "0644"
   when: network_static_dns_resolvers is defined or network_static_dns_search is defined
+  tags: [configure_dns]
 
 - name: Configure IPv4 firewall for static DNS
   ansible.builtin.template:
@@ -38,6 +41,7 @@
     dns_servers: "{{ v4_addresses | difference(v4_addresses | ansible.utils.ipaddr(query='loopback')) }}"
   when:
     - dns_servers|default([])|length > 0
+  tags: [configure_dns, configure_iptables]
 
 - name: Configure IPv6 firewall for static DNS
   ansible.builtin.template:
@@ -53,3 +57,4 @@
     dns_servers: "{{ v6_addresses | difference(v6_addresses | ansible.utils.ipaddr(query='loopback')) }}"
   when:
     - dns_servers|default([])|length > 0
+  tags: [configure_dns, configure_iptables]

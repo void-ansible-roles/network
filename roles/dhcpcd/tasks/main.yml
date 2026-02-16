@@ -3,9 +3,11 @@
   community.general.xbps:
     pkg: dhcpcd
     state: present
+  tags: [install_dhcpcd]
 
 - name: Enable Service
   community.general.runit:
     name: dhcpcd
     state: started
     enabled: true
+  tags: [enable_dhcpcd]

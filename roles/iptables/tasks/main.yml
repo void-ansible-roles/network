@@ -3,6 +3,7 @@
   community.general.xbps:
     pkg: iptables
     state: present
+  tags: [install_iptables]
 
 - name: Install iptables-reload command
   ansible.builtin.copy:
@@ -11,6 +12,7 @@
     owner: root
     group: root
     mode: "0755"
+  tags: [install_iptables]
 
 - name: Make iptables.d
   ansible.builtin.file:
@@ -19,6 +21,7 @@
     owner: root
     group: root
     mode: "0740"
+  tags: [install_iptables]
 
 - name: Configure base rules for IPv4 firewall
   ansible.builtin.template:
@@ -29,6 +32,7 @@
     mode: "0640"
   notify:
     - iptables
+  tags: [install_iptables, configure_iptables]
 
 - name: Make ip6tables.d
   ansible.builtin.file:
@@ -37,6 +41,7 @@
     owner: root
     group: root
     mode: "0740"
+  tags: [install_iptables]
 
 - name: Configure base rules for IPv6 firewall
   ansible.builtin.template:
@@ -47,9 +52,11 @@
     mode: "0640"
   notify:
     - iptables
+  tags: [install_iptables, configure_iptables]
 
 - name: Configure boot-time service
   ansible.builtin.file:
     src: /usr/local/sbin/iptables-reload
     dest: /etc/runit/core-services/04-iptables.sh
     state: link
+  tags: [install_iptables]
