@@ -37,7 +37,7 @@
     v4_addresses: "{{ network_static_dns_resolvers | ansible.utils.ipv4 }}"
     dns_servers: "{{ v4_addresses | difference(v4_addresses|ansible.utils.ipaddr(query='loopback')) }}"
   when:
-    - dns_servers|length > 0
+    - dns_servers|default([])|length > 0
 
 - name: Configure IPv6 firewall for static DNS
   template:
@@ -52,4 +52,4 @@
     v6_addresses: "{{ network_static_dns_resolvers | ansible.utils.ipv6 }}"
     dns_servers: "{{ v6_addresses | difference(v6_addresses|ansible.utils.ipaddr(query='loopback')) }}"
   when:
-    - dns_servers|length > 0
+    - dns_servers|default([])|length > 0
