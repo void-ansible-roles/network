@@ -1,8 +1,10 @@
 ---
-- name: dhcpcd
-  runit:
+- name: Restart dhcpcd
+  listen: dhcpcd
+  community.general.runit:
     name: dhcpcd
     state: restarted
 
-- name: iptables
-  command: /usr/local/sbin/iptables-reload
+- name: Reload iptables
+  listen: iptables
+  ansible.builtin.command: /usr/local/sbin/iptables-reload

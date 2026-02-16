@@ -1,11 +1,11 @@
 ---
 - name: Ensure Packages
-  xbps:
+  community.general.xbps:
     pkg: dhcpcd
     state: present
 
 - name: Enable Service
-  runit:
+  community.general.runit:
     name: dhcpcd
     state: started
     enabled: true

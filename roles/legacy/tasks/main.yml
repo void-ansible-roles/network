@@ -1,49 +1,49 @@
 ---
 - name: Configure hosts
-  template:
+  ansible.builtin.template:
     src: hosts.j2
     dest: /etc/hosts
     owner: root
     group: root
-    mode: 0644
+    mode: "0644"
   when: network_managed_addressing
 
 - name: Configure hostname
-  template:
+  ansible.builtin.template:
     src: hostname.j2
     dest: /etc/hostname
     owner: root
     group: root
-    mode: 0644
+    mode: "0644"
 
 - name: Install iptables
-  xbps:
+  community.general.xbps:
     pkg: iptables
     state: present
 
 - name: Configure resolvers
-  template:
+  ansible.builtin.template:
     src: resolv.conf.tail.j2
     dest: /etc/resolv.conf.tail
     owner: root
     group: root
-    mode: 0644
+    mode: "0644"
 
 - name: Install iptables-reload command
-  copy:
+  ansible.builtin.copy:
     src: iptables-reload
     dest: /usr/local/sbin/iptables-reload
     owner: root
     group: root
-    mode: 0755
+    mode: "0755"
 
 - name: Configure dhcpcd
-  template:
+  ansible.builtin.template:
     src: dhcpcd.conf.j2
     dest: /etc/dhcpcd.conf
     owner: root
     group: root
-    mode: 0644
+    mode: "0644"
   vars:
     network_netmask: "{{ ansible_default_ipv4.address }}/{{ ansible_default_ipv4.netmask }}"
     network_cidr: "{{ ansible_default_ipv4.address }}/{{ network_netmask | ipaddr('prefix') }}"
@@ -53,30 +53,30 @@
   when: network_managed_addressing
 
 - name: Enable dhcpcd
-  runit:
+  community.general.runit:
     name: dhcpcd
-    enabled: yes
+    enabled: true
     state: started
   when: network_managed_addressing
 
 - name: Enable wpa_supplicant hook
-  runit:
+  community.general.runit:
     name: wpa_supplicant
     enabled: "{{ network_enable_wpa_supplicant }}"
 
 - name: Add dhcpcd iptables hook
-  copy:
+  ansible.builtin.copy:
     src: 99-iptables
     dest: /usr/share/dhcpcd/hooks/99-iptables
     owner: root
     group: root
-    mode: 0740
+    mode: "0740"
   notify:
     - dhcpcd
   when: network_managed_addressing
 
 - name: Enable dhcpcd iptables hook
-  file:
+  ansible.builtin.file:
     src: /usr/share/dhcpcd/hooks/99-iptables
     dest: /usr/libexec/dhcpcd-hooks/99-iptables
     state: link
@@ -87,37 +87,37 @@
   when: network_managed_addressing
 
 - name: Make iptables.d
-  file:
+  ansible.builtin.file:
     path: /etc/iptables.d
     state: directory
     owner: root
     group: root
-    mode: 0740
+    mode: "0740"
 
 - name: Configure base rules for IPv4 firewall
-  template:
+  ansible.builtin.template:
     src: 0common.rules.j2
     dest: /etc/iptables.d/0common.rules
     owner: root
     group: root
-    mode: 0640
+    mode: "0640"
   notify:
     - iptables
 
 - name: Make ip6tables.d
-  file:
+  ansible.builtin.file:
     path: /etc/ip6tables.d
     state: directory
     owner: root
     group: root
-    mode: 0740
+    mode: "0740"
 
 - name: Configure base rules for IPv6 firewall
-  template:
+  ansible.builtin.template:
     src: 0common.6rules.j2
     dest: /etc/ip6tables.d/0common.6rules
     owner: root
     group: root
-    mode: 0640
+    mode: "0640"
   notify:
     - iptables

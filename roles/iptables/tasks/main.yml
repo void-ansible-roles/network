@@ -1,55 +1,55 @@
 ---
 - name: Install iptables
-  xbps:
+  community.general.xbps:
     pkg: iptables
     state: present
 
 - name: Install iptables-reload command
-  copy:
+  ansible.builtin.copy:
     src: iptables-reload
     dest: /usr/local/sbin/iptables-reload
     owner: root
     group: root
-    mode: 0755
+    mode: "0755"
 
 - name: Make iptables.d
-  file:
+  ansible.builtin.file:
     path: /etc/iptables.d
     state: directory
     owner: root
     group: root
-    mode: 0740
+    mode: "0740"
 
 - name: Configure base rules for IPv4 firewall
-  template:
+  ansible.builtin.template:
     src: 0common.rules.j2
     dest: /etc/iptables.d/0common.rules
     owner: root
     group: root
-    mode: 0640
+    mode: "0640"
   notify:
     - iptables
 
 - name: Make ip6tables.d
-  file:
+  ansible.builtin.file:
     path: /etc/ip6tables.d
     state: directory
     owner: root
     group: root
-    mode: 0740
+    mode: "0740"
 
 - name: Configure base rules for IPv6 firewall
-  template:
+  ansible.builtin.template:
     src: 0common.6rules.j2
     dest: /etc/ip6tables.d/0common.6rules
     owner: root
     group: root
-    mode: 0640
+    mode: "0640"
   notify:
     - iptables
 
 - name: Configure boot-time service
-  file:
+  ansible.builtin.file:
     src: /usr/local/sbin/iptables-reload
     dest: /etc/runit/core-services/04-iptables.sh
     state: link

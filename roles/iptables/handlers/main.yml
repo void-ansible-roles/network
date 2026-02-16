@@ -1,3 +1,4 @@
 ---
-- name: iptables
-  command: /usr/local/sbin/iptables-reload
+- name: Reload iptables
+  listen: iptables
+  ansible.builtin.command: /usr/local/sbin/iptables-reload

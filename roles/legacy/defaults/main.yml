@@ -64,7 +64,6 @@ network_dhcp_options:
   - ntp_servers
   - interface_mtu
 
-
 # Finally the firewall policy may be set to accept if you prefer not
 # use the built in firewall handler to use fragment iptables
 # instructions.  Valid options are 'ACCEPT' and 'DROP'.

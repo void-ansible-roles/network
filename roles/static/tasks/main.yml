@@ -1,8 +1,8 @@
 ---
 - name: Configure Static Interfaces
-  template:
+  ansible.builtin.template:
     src: 03-static-interfaces.sh.j2
     dest: /etc/runit/core-services/03-static-interfaces.sh
     owner: root
     group: root
-    mode: 0644
+    mode: "0644"

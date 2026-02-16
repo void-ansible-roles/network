@@ -1,3 +1,4 @@
+---
 namespace: void
 name: network
 version: 0.1.2
@@ -16,4 +17,3 @@ tags:
 
 repository: https://www.github.com/void-ansible-roles/network
 issues: https://www.github.com/void-ansible-roles/network/issues
-
